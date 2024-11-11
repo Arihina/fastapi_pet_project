@@ -1,0 +1,79 @@
+body {
+    background: #B1A98C;
+    background: linear-gradient(270deg, #B1A98C, #4C8FA4);
+}
+
+p {
+    color: #2C3531;
+}
+
+h1,
+h2 {
+    color: #2C3531;
+    text-align: center;
+}
+
+.btn {
+    background-color: #116466;
+    color: #D1E8E2;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 10px;
+    float: right;
+}
+
+.btn:hover {
+    background-color: #2C3531;
+    color: #D1E8E2;
+}
+
+
+.card {
+    width: 45%;
+    background-color: rgba(209, 232, 226, 0.8);
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.horiz {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #116466;
+    color: #D1E8E2;
+  }
+  
+  td {
+    background-color: rgba(209, 232, 226, 0.8);
+  }
+  
+  th:hover, td:hover {
+    background-color: #2C3531;
+    color: #D1E8E2;
+  }
+  
+
