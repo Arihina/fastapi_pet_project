@@ -9,3 +9,9 @@ class OrderResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class OrderRequest(BaseModel):
+    product_quantity: int = None
+    total_cost: float = None
+    provider_id: int = None
