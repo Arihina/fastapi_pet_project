@@ -21,6 +21,7 @@ async def get_orders(session: AsyncSession = Depends(engine.get_session)):
 async def get_order(id: int, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Order).where(Order.id == id))
     order = result.scalar_one_or_none()
+
     if order:
         return order
     else:
@@ -28,7 +29,7 @@ async def get_order(id: int, session: AsyncSession = Depends(engine.get_session)
 
 
 @router.post('/orders')
-async def add_orders(order: OrderRequest, session: AsyncSession = Depends(engine.get_session)):
+async def add_order(order: OrderRequest, session: AsyncSession = Depends(engine.get_session)):
     new_order = Order(
         product_quantity=order.product_quantity,
         total_cost=order.total_cost,
