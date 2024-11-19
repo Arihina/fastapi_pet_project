@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic import BaseModel
 
 
@@ -87,3 +89,19 @@ class ProductRequest(BaseModel):
     count: int = None
     order_id: int = None
     description_id: int = None
+
+
+class SalesAccountingResponse(BaseModel):
+    id: int
+    date: datetime.datetime
+    product_id: int
+    buyer_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class SalesAccountingRequest(BaseModel):
+    date: datetime.datetime = None
+    product_id: int = None
+    buyer_id: int = None
