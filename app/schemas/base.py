@@ -51,3 +51,21 @@ class BuyerRequest(BaseModel):
     organization_name: str = None
     phone_number: str = None
     address: str = None
+
+
+class ProviderResponse(BaseModel):
+    id: int
+    full_name: str
+    product_name: str
+    phone_number: str
+    email: str
+
+    class Config:
+        from_attributes = True
+
+
+class ProviderRequest(BaseModel):
+    full_name: str = None
+    product_name: str = None
+    phone_number: str = None
+    email: str = None
