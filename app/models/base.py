@@ -12,10 +12,10 @@ class Order(Base):
     id: Mapped[int] = mapped_column("код_заказа", primary_key=True)
     product_quantity: Mapped[int] = mapped_column("количество_товаров")
     total_cost: Mapped[float] = mapped_column("общие_затраты")
-    provider_id: Mapped[int] = mapped_column("код_поставщика")
+    provider_id: Mapped[int] = mapped_column("код_поставщика", ForeignKey("Поставщик.код_поставщика"))
 
-    provider = relationship('Provider', back_populates='Заказ')
-    product = relationship('Product', back_populates='Заказ')
+    provider = relationship('Provider', back_populates='orders')
+    products = relationship('Product', back_populates='order')
 
 
 class Description(Base):
@@ -27,7 +27,7 @@ class Description(Base):
     weight: Mapped[int] = mapped_column("вес")
     dimensions: Mapped[int] = mapped_column("габариты")
 
-    product = relationship('Product', back_populates='Описание')
+    products = relationship('Product', back_populates='description')
 
 
 class Buyer(Base):
@@ -39,7 +39,7 @@ class Buyer(Base):
     phone_number: Mapped[str] = mapped_column("телефон")
     address: Mapped[str] = mapped_column("адрес")
 
-    sales_accounting = relationship('SalesAccounting', back_populates='Покупатель')
+    sales_accounting = relationship('SalesAccounting', back_populates='buyer')
 
 
 class Provider(Base):
@@ -51,7 +51,7 @@ class Provider(Base):
     phone_number: Mapped[str] = mapped_column("телефон")
     email: Mapped[str] = mapped_column("email")
 
-    order = relationship('Order', back_populates='Поставщик')
+    orders = relationship('Order', back_populates='provider')
 
 
 class Product(Base):
@@ -61,11 +61,11 @@ class Product(Base):
     price: Mapped[float] = mapped_column("цена_продажи")
     count: Mapped[int] = mapped_column("количество")
     order_id: Mapped[int] = mapped_column("код_заказа", ForeignKey('Заказ.код_заказа'))
-    description_id: Mapped[int] = mapped_column("код_описания")
+    description_id: Mapped[int] = mapped_column("код_описания", ForeignKey('Описание.код_описания'))
 
-    order = relationship('Order', back_populates='Товар')
-    description = relationship('Description', back_populates='Товар')
-    sales_accounting = relationship('SalesAccounting', back_populates='Товар')
+    order = relationship('Order', back_populates='products')
+    description = relationship('Description', back_populates='products')
+    sales_accounting = relationship('SalesAccounting', back_populates='product')
 
 
 class SalesAccounting(Base):
@@ -73,8 +73,8 @@ class SalesAccounting(Base):
 
     id: Mapped[int] = mapped_column("код_продажи", primary_key=True)
     date: Mapped[datetime.datetime] = mapped_column("дата_продажи")
-    product_id: Mapped[int] = mapped_column("код_товара")
-    buyer_id: Mapped[int] = mapped_column("код_покупателя")
+    product_id: Mapped[int] = mapped_column("код_товара", ForeignKey('Товар.код_товара'))
+    buyer_id: Mapped[int] = mapped_column("код_покупателя", ForeignKey('Покупатель.код_покупателя'))
 
-    product = relationship('Product', back_populates='Учёт_продаж')
-    buyer = relationship('Buyer', back_populates='Учёт_продаж')
+    product = relationship('Product', back_populates='sales_accounting')
+    buyer = relationship('Buyer', back_populates='sales_accounting')
