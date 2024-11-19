@@ -69,3 +69,21 @@ class ProviderRequest(BaseModel):
     product_name: str = None
     phone_number: str = None
     email: str = None
+
+
+class ProductResponse(BaseModel):
+    id: int
+    price: float
+    count: int
+    order_id: int
+    description_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class ProductRequest(BaseModel):
+    price: float = None
+    count: int = None
+    order_id: int = None
+    description_id: int = None
