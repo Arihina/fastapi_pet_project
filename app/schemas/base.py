@@ -22,11 +22,11 @@ class DescriptionResponse(BaseModel):
     furniture_type: str
     material: str
     weight: int
-    dimensions: int
+    dimensions: str
 
 
 class DescriptionRequest(BaseModel):
     furniture_type: str = None
     material: str = None
     weight: int = None
-    dimensions: int = None
+    dimensions: str = None

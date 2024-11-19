@@ -25,7 +25,7 @@ class Description(Base):
     furniture_type: Mapped[str] = mapped_column("тип_мебели")
     material: Mapped[str] = mapped_column("материал")
     weight: Mapped[int] = mapped_column("вес")
-    dimensions: Mapped[int] = mapped_column("габариты")
+    dimensions: Mapped[str] = mapped_column("габариты")
 
     products = relationship('Product', back_populates='description')
 
