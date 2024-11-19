@@ -24,9 +24,30 @@ class DescriptionResponse(BaseModel):
     weight: int
     dimensions: str
 
+    class Config:
+        from_attributes = True
+
 
 class DescriptionRequest(BaseModel):
     furniture_type: str = None
     material: str = None
     weight: int = None
     dimensions: str = None
+
+
+class BuyerResponse(BaseModel):
+    id: int
+    full_name: str
+    organization_name: str
+    phone_number: str
+    address: str
+
+    class Config:
+        from_attributes = True
+
+
+class BuyerRequest(BaseModel):
+    full_name: str = None
+    organization_name: str = None
+    phone_number: str = None
+    address: str = None

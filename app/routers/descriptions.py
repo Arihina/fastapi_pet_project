@@ -12,9 +12,9 @@ router = APIRouter()
 @router.get('/descriptions', response_model=list[DescriptionResponse])
 async def get_descriptions(session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Description))
-    description = result.scalars().all()
+    descriptions = result.scalars().all()
 
-    return description
+    return descriptions
 
 
 @router.get('/descriptions/{id}', response_model=DescriptionResponse)
