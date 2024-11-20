@@ -1,4 +1,9 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,22 +13,30 @@ from app.schemas.base import OrderResponse, OrderRequest
 
 router = APIRouter()
 
+router.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent.parent / "static"), name="static")
+templates = Jinja2Templates(directory=Path(__file__).resolve().parent.parent / "templates")
+
 
 @router.get('/orders', response_model=list[OrderResponse])
-async def get_orders(session: AsyncSession = Depends(engine.get_session)):
+async def get_orders(request: Request, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Order))
     orders = result.scalars().all()
 
-    return orders
+    return templates.TemplateResponse('orders.html', {"request": request, "lst": orders})
+
+
+@router.get('/orders/form')
+async def get_order_form(request: Request):
+    return templates.TemplateResponse("order_form.html", {"request": request})
 
 
 @router.get('/orders/{id}', response_model=OrderResponse)
-async def get_order(id: int, session: AsyncSession = Depends(engine.get_session)):
+async def get_order(request: Request, id: int, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Order).where(Order.id == id))
     order = result.scalar_one_or_none()
 
     if order:
-        return order
+        return templates.TemplateResponse('order_card.html', {"request": request, "order": order})
     else:
         raise HTTPException(status_code=404, detail="Order not found")
 
@@ -76,4 +89,3 @@ async def delete_order(id: int, session: AsyncSession = Depends(engine.get_sessi
     await session.commit()
 
     return '204'
-

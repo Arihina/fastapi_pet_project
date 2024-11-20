@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Добавить</title>
+    <style>
+        .block {
+        margin: 50px auto;
+        width: 500px;
+        display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(209, 232, 226, 0.8);
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    text-align: center;
+}
+
+.block label {
+  display: inline-block;
+  width: 120px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.block input[type="text"],
+.block input[type="submit"] {
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1.1em;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #0A5F38;
+    color: white;
+    cursor: pointer;
+    width: auto;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+}
+    </style>
+</head>
+<body>
+
+<h1>Добавить Заказ</h1>
+<div class="block">
+    <form id="orderForm">
+        <label for="product_quantity">Количество товара:</label>
+        <input type="text" name="product_quantity" id="product_quantity" required><br><br>
+        <label for="total_cost">Общие затраты:</label>
+        <input type="text" name="total_cost" id="total_cost" required><br><br>
+        <label for="provider_id">Код поставщика:</label>
+        <input type="text" name="provider_id" id="provider_id" required><br><br>
+        <button type="button" onclick="submitForm()">Добавить</button>
+    </form>
+</div>
+</body>
+<script>
+async function submitForm() {
+    const formData = new FormData(document.getElementById('orderForm'));
+    const orderData = {};
+
+    for (const [key, value] of formData.entries()) {
+        orderData[key] = value;
+    }
+
+    try {
+        const response = await fetch('/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData),
+        });
+
+        if (!response.ok) {
+            let errorMessage = "Ошибка отправки формы";
+            try {
+                const errorData = await response.json();
+                if (errorData.detail) {
+                    errorMessage = errorData.detail;
+                } else if (errorData.error){
+                    errorMessage = errorData.error;
+                }
+            } catch (jsonError) {
+                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
+                errorMessage = `Ошибка сервера: ${response.status}`;
+            }
+            alert(errorMessage);
+            return;
+        }
+
+        alert('Заказ добавлен успешно!');
+    } catch (error) {
+        console.error('Ошибка отправки формы:', error);
+        alert('Произошла ошибка при добавлении заказа.');
+    }
+}
+</script>
+</html>

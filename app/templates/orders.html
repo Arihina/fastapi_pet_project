@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Заказы</title>
+</head>
+<body>
+<h1>Заказы</h1>
+<table>
+    <tr>
+        <th>Код заказа</th>
+        <th>Количество товара</th>
+        <th>Общие затраты</th>
+        <th>Код поставщика</th>
+        <th style="background-color: #0A5F38; color: #f5f5f5; text-align: center;" colspan="2">
+            <a href="{{ url_for('get_order_form') }}" style="text-decoration: none; color: #f5f5f5;">Добавить</a>
+        </th>
+    </tr>
+    {% for e in lst %}
+    <tr>
+        <td>{{e.id}}</td>
+        <td>{{e.product_quantity}}</td>
+        <td>{{e.total_cost}}</td>
+        <td>{{e.provider_id}}</td>
+        <td style="background-color: #003153; color: #f5f5f5;  text-align: center;">
+            <a href="{{ url_for('get_order', id=e.id) }}" style="text-decoration: none; color: #f5f5f5;">Изменить</a>
+        </td>
+        <td style="background-color: #5E2129; color: #f5f5f5; text-align: center;">
+            <button onclick="deleteOrder({{ e.id }})" style="width: 100%; background-color: #5E2129;
+        color: #f5f5f5; border: none;">Удалить</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+<script>
+    async function deleteOrder(orderId) {
+      if (!confirm("Вы уверены, что хотите удалить заказ?")) return;
+
+      try {
+        const response = await fetch(`/orders/${orderId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          const errorMessage = errorData.detail || `Error deleting buyer: ${response.status}`;
+          alert(errorMessage);
+          return;
+        }
+
+        location.reload();
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An unexpected error occurred.');
+      }
+    }
+</script>
+</html>
