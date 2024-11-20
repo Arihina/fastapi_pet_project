@@ -1,4 +1,9 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,22 +13,30 @@ from app.schemas.base import BuyerResponse, BuyerRequest
 
 router = APIRouter()
 
+router.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent.parent / "static"), name="static")
+templates = Jinja2Templates(directory=Path(__file__).resolve().parent.parent / "templates")
 
-@router.get('/buyers', response_model=list[BuyerResponse])
-async def get_buyers(session: AsyncSession = Depends(engine.get_session)):
+
+@router.get('/buyers')
+async def get_buyers(request: Request, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Buyer))
     buyers = result.scalars().all()
 
-    return buyers
+    return templates.TemplateResponse('buyers.html', {"request": request, "lst": buyers})
+
+
+@router.get('/buyers/form')
+async def get_buyer_form(request: Request):
+    return templates.TemplateResponse("buyer_form.html", {"request": request})
 
 
 @router.get('/buyers/{id}', response_model=BuyerResponse)
-async def get_buyer(id: int, session: AsyncSession = Depends(engine.get_session)):
+async def get_buyer(request: Request, id: int, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Buyer).where(Buyer.id == id))
     buyer = result.scalar_one_or_none()
 
     if buyer:
-        return buyer
+        return templates.TemplateResponse('buyer_card.html', {"request": request, "buyer": buyer})
     else:
         raise HTTPException(status_code=404, detail="Buyer not found")
 
@@ -79,4 +92,3 @@ async def delete_buyer(id: int, session: AsyncSession = Depends(engine.get_sessi
     await session.commit()
 
     return '204'
-
