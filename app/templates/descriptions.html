@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Описания</title>
+</head>
+<body>
+<h1>Описания</h1>
+<table>
+    <tr>
+        <th>Код Описания</th>
+        <th>Тип мебели</th>
+        <th>Материал</th>
+        <th>Вес</th>
+        <th>Габариты</th>
+        <th style="background-color: #0A5F38; color: #f5f5f5; text-align: center;" colspan="2">
+            <a href="{{ url_for('get_description_form') }}" style="text-decoration: none; color: #f5f5f5;">Добавить</a>
+        </th>
+    </tr>
+    {% for e in lst %}
+    <tr>
+        <td>{{e.id}}</td>
+        <td>{{e.furniture_type}}</td>
+        <td>{{e.material}}</td>
+        <td>{{e.weight}}</td>
+        <td>{{e.dimensions}}</td>
+        <td style="background-color: #003153; color: #f5f5f5;  text-align: center;">
+            <a href="{{ url_for('get_description', id=e.id) }}" style="text-decoration: none; color: #f5f5f5;">Изменить</a>
+        </td>
+        <td style="background-color: #5E2129; color: #f5f5f5; text-align: center;">
+            <button onclick="deleteDescription({{ e.id }})" style="width: 100%; background-color: #5E2129;
+        color: #f5f5f5; border: none;">Удалить</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+<script>
+    async function deleteDescription(descriptionId) {
+      if (!confirm("Вы уверены, что хотите удалить описание?")) return;
+
+      try {
+        const response = await fetch(`/descriptions/${descriptionId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          const errorMessage = errorData.detail || `Error deleting buyer: ${response.status}`;
+          alert(errorMessage);
+          return;
+        }
+
+        location.reload();
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An unexpected error occurred.');
+      }
+    }
+</script>
+</html>

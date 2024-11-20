@@ -1,4 +1,9 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,22 +13,30 @@ from app.schemas.base import DescriptionResponse, DescriptionRequest
 
 router = APIRouter()
 
+router.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent.parent / "static"), name="static")
+templates = Jinja2Templates(directory=Path(__file__).resolve().parent.parent / "templates")
+
 
 @router.get('/descriptions', response_model=list[DescriptionResponse])
-async def get_descriptions(session: AsyncSession = Depends(engine.get_session)):
+async def get_descriptions(request: Request, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Description))
     descriptions = result.scalars().all()
 
-    return descriptions
+    return templates.TemplateResponse('descriptions.html', {"request": request, "lst": descriptions})
+
+
+@router.get('/descriptions/form')
+async def get_description_form(request: Request):
+    return templates.TemplateResponse("description_form.html", {"request": request})
 
 
 @router.get('/descriptions/{id}', response_model=DescriptionResponse)
-async def get_description(id: int, session: AsyncSession = Depends(engine.get_session)):
+async def get_description(request: Request, id: int, session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(select(Description).where(Description.id == id))
     description = result.scalar_one_or_none()
 
     if description:
-        return description
+        return templates.TemplateResponse('description_card.html', {"request": request, "d": description})
     else:
         raise HTTPException(status_code=404, detail="Description not found")
 
