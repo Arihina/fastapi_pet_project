@@ -64,7 +64,7 @@ async def update_description(id: int, description_data: DescriptionRequest,
     description = result.scalar_one_or_none()
 
     if description is None:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=404, detail="Description not found")
 
     if description_data.furniture_type is not None:
         description.furniture_type = description_data.furniture_type
