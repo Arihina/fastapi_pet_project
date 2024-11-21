@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Панель кладовщика</title>
+    <style>
+     .gallery {
+       display: flex;
+       gap: 4px;
+       align-items: center;
+       margin-top: 50px;
+     }
+
+     .card {
+       position: relative;
+       left: 0px;
+       width: 80px;
+       border-radius: 4px;
+       padding: 8px;
+       height: 160px;
+       background-color: white;
+       transition: 0.4s ease-in-out;
+       flex: 1px;
+     }
+
+     .card:nth-child(1) {
+       background-color: #008B8B;
+     }
+
+     .card:nth-child(2) {
+       background-color: #7BA591;
+     }
+
+     .card:nth-child(3) {
+       background-color: #E4717A;
+     }
+
+     .card:nth-child(4) {
+       background-color: #F15B4C;
+     }
+
+     .card:nth-child(5) {
+       background-color: #FAA41B;
+     }
+
+     .card:nth-child(6) {
+       background-color: #FFD45D;
+     }
+
+     .card:nth-child(7) {
+       background-color: #DCD0FF;
+     }
+
+     .card:nth-child(8) {
+       background-color:  #7FC7FF;
+     }
+
+     .card:hover {
+       flex: 3;
+       font-weight: bold;
+       cursor: pointer;
+     }
+    </style>
+</head>
+<body>
+<h1 style="margin-top: 150px;">Панель кладовщика</h1>
+<div class="gallery">
+    <div class="card" onclick="goToProductsInfo()">
+        <h2>Товары</h2>
+        <p>Информация о товарах и описаниях</p>
+    </div>
+    <div class="card" onclick="goToSalesInfo()">
+        <h2>Учет продаж</h2>
+        <p>Информация о реализациях и товарах</p>
+    </div>
+    <div class="card" onclick="goToBuyersInfo()">
+        <h2>Покупатели</h2>
+        <p>Информация о покупателях и товарах</p>
+    </div>
+    <div class="card" onclick="goToOrdersInfo()">
+        <h2>Заказы</h2>
+        <p>Информация о заказах, товарах и их поставщиках</p>
+    </div>
+    <div class="card" onclick="goToOrderForm()">
+        <h2>Заказы</h2>
+        <p>Добавить заказ</p>
+    </div>
+    <div class="card" onclick="goToProductForm()">
+        <h2>Товары</h2>
+        <p>Добавить товар</p>
+    </div>
+    <div class="card" onclick="goToEditForm()">
+        <h2>Товары</h2>
+        <p>Обновить информацию о товаре</p>
+    </div>
+    <div class="card" onclick="goToSaleForm()">
+        <h2>Продажи</h2>
+        <p>Добавить продажу</p>
+    </div>
+</div>
+</body>
+<script>
+function goToProductsInfo() {
+  window.location.href = "/storekeeper/products-info";
+}
+function goToSalesInfo() {
+  window.location.href = "/storekeeper/sales-info";
+}
+function goToBuyersInfo() {
+  window.location.href = "/storekeeper/buyers-info";
+}
+function goToOrdersInfo() {
+  window.location.href = "/storekeeper/orders-info";
+}
+function goToOrderForm() {
+  window.location.href = "/storekeeper/order-form";
+}
+function goToProductForm() {
+  window.location.href = "/storekeeper/product-form";
+}
+function goToSaleForm() {
+  window.location.href = "/storekeeper/sale-form";
+}
+function goToEditForm() {
+  window.location.href = "/storekeeper/edit-form";
+}
+</script>
+</html>

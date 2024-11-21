@@ -1,4 +1,10 @@
-from fastapi import APIRouter, Depends
+from pathlib import Path
+
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,10 +14,13 @@ from app.schemas.base import ProductInfo, SaleInfo, BuyerInfo, OrderInfo
 
 router = APIRouter(prefix='/storekeeper')
 
+router.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent.parent / "static"), name="static")
+templates = Jinja2Templates(directory=Path(__file__).resolve().parent.parent / "templates")
+
 
 @router.get('/')
-async def storekeeper(session: AsyncSession = Depends(engine.get_session)):
-    pass
+async def storekeeper(request: Request):
+    return templates.TemplateResponse("storekeeper.html", {"request": request})
 
 
 @router.get('/products-info')
