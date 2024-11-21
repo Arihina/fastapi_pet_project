@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Панель управления администратора</title>
+    <style>
+     .gallery {
+       display: flex;
+       gap: 4px;
+       align-items: center;
+       margin-top: 50px;
+     }
+
+     .card {
+       position: relative;
+       left: 0px;
+       width: 80px;
+       border-radius: 4px;
+       padding: 8px;
+       height: 160px;
+       background-color: white;
+       transition: 0.4s ease-in-out;
+       flex: 1px;
+     }
+
+     .card:nth-child(1) {
+       background-color: #008B8B;
+     }
+
+     .card:nth-child(2) {
+       background-color: #7BA591;
+     }
+
+     .card:nth-child(3) {
+       background-color: #CC222B;
+     }
+
+     .card:nth-child(4) {
+       background-color: #F15B4C;
+     }
+
+     .card:nth-child(5) {
+       background-color: #FAA41B;
+     }
+
+     .card:nth-child(6) {
+       background-color: #FFD45D;
+     }
+
+     .card:hover {
+       flex: 3;
+       font-weight: bold;
+       cursor: pointer;
+     }
+    </style>
+</head>
+<body>
+<h1 style="margin-top: 150px;">Панель управления администратора</h1>
+<div class="gallery">
+    <div class="card" onclick="goToByers()">
+        <h2>Покупатели</h2>
+        <p>Ифнормация и контактные данные всех клиентов</p>
+    </div>
+    <div class="card" onclick="goToDescriptions()">
+        <h2>Описания товаров</h2>
+        <p>Информация о размерах и материалах товаров</p>
+    </div>
+    <div class="card" onclick="goToOrders()">
+        <h2>Заказы</h2>
+        <p>Информация о реализации товаров и оплате</p>
+    </div>
+    <div class="card" onclick="goToProviders()">
+        <h2>Поставщики</h2>
+        <p>Информация и контактные данные поставщиков</p>
+    </div>
+    <div class="card" onclick="goToProducts()">
+        <h2>Товары</h2>
+        <p>Информация о продуктах на складе</p>
+    </div>
+    <div class="card" onclick="goToSales()">
+        <h2>Учёт продаж</h2>
+        <p>Информация и продажах</p>
+    </div>
+</div>
+</body>
+<script>
+function goToByers() {
+  window.location.href = "/buyers";
+}
+function goToDescriptions() {
+  window.location.href = "/descriptions";
+}
+function goToOrders() {
+  window.location.href = "/orders";
+}
+function goToProviders() {
+  window.location.href = "/providers";
+}
+function goToProducts() {
+  window.location.href = "/products";
+}
+function goToSales() {
+  window.location.href = "/sales-accounting";
+}
+</script>
+</html>
