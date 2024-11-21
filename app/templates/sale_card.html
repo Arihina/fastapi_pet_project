@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Продажа</title>
+        <style>
+        .block {
+        margin: 50px auto;
+        width: 600px;
+        display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(209, 232, 226, 0.8);
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    text-align: center;
+}
+
+.block label {
+  display: inline-block;
+  width: 120px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.block input[type="text"],
+.block input[type="submit"] {
+width: 300px;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1.1em;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #0A5F38;
+    color: white;
+    cursor: pointer;
+    width: auto;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+}
+    </style>
+</head>
+<body>
+<div class="block">
+    <h1>Продажа {{ sale.id }}</h1>
+
+    <form id="updateSaleForm">
+        <label for="date">Дата:</label>
+        <input type="text" id="date" name="date" value="{{sale.date}}" required><br>
+        <label for="product_id">Код товара:</label>
+        <input type="text" id="product_id" name="product_id"
+               value="{{ sale.product_id}}"><br>
+        <label for="buyer_id">Код покупателя:</label>
+        <input type="text" id="buyer_id" name="buyer_id" value="{{sale.buyer_id}}" required><br>
+        <button onclick="updateSale()">Изменить</button>
+    </form>
+</div>
+</body>
+<script>
+async function updateSale() {
+    const formData = new FormData(document.getElementById('updateSaleForm'));
+    const saleData = {};
+
+    for (const [key, value] of formData.entries()) {
+        saleData[key] = value;
+    }
+
+    const saleId = {{ sale.id }};
+
+    try {
+        const response = await fetch(`/sales-accounting/${saleId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(saleData),
+        });
+
+        if (!response.ok) {
+            let errorMessage = "Ошибка обновления данных продажи";
+            try {
+                const errorData = await response.json();
+                if (errorData.detail) {
+                    errorMessage = errorData.detail;
+                } else if (errorData.error) {
+                    errorMessage = errorData.error;
+                }
+            } catch (jsonError) {
+                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
+                errorMessage = `Ошибка сервера: ${response.status}`;
+            }
+            alert(errorMessage);
+            return;
+        }
+
+        alert('Данные продажи успешно обновлены!');
+    } catch (error) {
+        console.error('Ошибка обновления данных продажи:', error);
+        alert('Произошла ошибка при обновлении данных продажи.');
+    }
+}
+</script>
+</html>
