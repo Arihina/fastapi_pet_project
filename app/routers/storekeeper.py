@@ -57,3 +57,23 @@ async def get_orders_info(session: AsyncSession = Depends(engine.get_session)):
     result = await session.execute(query)
 
     return [OrderInfo.from_orm(_).dict() for _ in result.fetchall()]
+
+
+@router.get('/order-form')
+async def get_order_form(session: AsyncSession = Depends(engine.get_session)):
+    pass
+
+
+@router.get('/product-form')
+async def get_product_form(session: AsyncSession = Depends(engine.get_session)):
+    pass
+
+
+@router.get('/sale-form')
+async def get_sale_form(session: AsyncSession = Depends(engine.get_session)):
+    pass
+
+
+@router.get('/edit-form')
+async def get_edit_form(session: AsyncSession = Depends(engine.get_session)):
+    pass
