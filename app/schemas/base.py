@@ -105,3 +105,51 @@ class SalesAccountingRequest(BaseModel):
     date: datetime.datetime = None
     product_id: int = None
     buyer_id: int = None
+
+
+class ProductInfo(BaseModel):
+    price: float
+    count: int
+    dimensions: str
+    furniture_type: str
+    weight: int
+    material: str
+
+    class Config:
+        from_attributes = True
+
+
+class SaleInfo(BaseModel):
+    price: float
+    count: int
+    order_id: int
+    date: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
+
+class BuyerInfo(BaseModel):
+    date: datetime.datetime
+    full_name: str
+    organization_name: str
+    phone_number: str
+    address: str
+    product_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class OrderInfo(BaseModel):
+    product_quantity: int
+    total_cost: float
+    price: float
+    count: int
+    full_name: str
+    product_name: str
+    phone_number: str
+    email: str
+
+    class Config:
+        from_attributes = True
