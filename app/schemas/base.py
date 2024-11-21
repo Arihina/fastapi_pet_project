@@ -153,3 +153,12 @@ class OrderInfo(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ProductData(BaseModel):
+    id: int
+    price: float | None = None
+    count: int | None = None
+    order_id: int | None = None
+    description_id: int | None = None
+
