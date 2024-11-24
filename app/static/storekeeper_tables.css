@@ -1,0 +1,48 @@
+.horiz {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    margin: 5px;
+  }
+
+  th {
+    background-color: #116466;
+    color: #D1E8E2;
+  }
+
+  td {
+    background-color: rgba(209, 232, 226, 0.8);
+  }
+
+  th:hover, td:hover {
+    background-color: #2C3531;
+    color: #D1E8E2;
+  }
+
+body {
+    background: #B1A98C;
+    background: linear-gradient(270deg, #B1A98C, #4C8FA4);
+}
+
+p {
+    color: #2C3531;
+}
+
+h1,
+h2 {
+    color: #2C3531;
+    text-align: center;
+}

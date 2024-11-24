@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/storekeeper_tables.css">
+    <title>Товары</title>
+</head>
+<body>
+<h1>Товары</h1>
+<table>
+    <tr>
+        <th>Код товара</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th>Габариты</th>
+        <th>Тип мебели</th>
+        <th>Вес</th>
+        <th>Материал</th>
+
+    </tr>
+    {% for e in lst %}
+    <tr>
+        <td>{{e.id}}</td>
+        <td>{{e.price}}</td>
+        <td>{{e.count}}</td>
+        <td>{{e.dimensions}}</td>
+        <td>{{e.furniture_type}}</td>
+        <td>{{e.weight}}</td>
+        <td>{{e.material}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

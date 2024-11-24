@@ -108,6 +108,7 @@ class SalesAccountingRequest(BaseModel):
 
 
 class ProductInfo(BaseModel):
+    id: int
     price: float
     count: int
     dimensions: str
@@ -142,10 +143,9 @@ class BuyerInfo(BaseModel):
 
 
 class OrderInfo(BaseModel):
+    id: int
     product_quantity: int
     total_cost: float
-    price: float
-    count: int
     full_name: str
     product_name: str
     phone_number: str
