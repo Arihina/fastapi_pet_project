@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/cards_style.css">
+    <script src="/static/script.js"></script>
     <title>Продажа</title>
 </head>
 <body>
@@ -17,52 +18,8 @@
                value="{{ sale.product_id}}"><br>
         <label for="buyer_id">Код покупателя:</label>
         <input type="text" id="buyer_id" name="buyer_id" value="{{sale.buyer_id}}" required><br>
-        <button onclick="updateSale()">Изменить</button>
+        <button onclick="updateSale({{ sale.id }})">Изменить</button>
     </form>
 </div>
 </body>
-<script>
-async function updateSale() {
-    const formData = new FormData(document.getElementById('updateSaleForm'));
-    const saleData = {};
-
-    for (const [key, value] of formData.entries()) {
-        saleData[key] = value;
-    }
-
-    const saleId = {{ sale.id }};
-
-    try {
-        const response = await fetch(`/sales-accounting/${saleId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(saleData),
-        });
-
-        if (!response.ok) {
-            let errorMessage = "Ошибка обновления данных продажи";
-            try {
-                const errorData = await response.json();
-                if (errorData.detail) {
-                    errorMessage = errorData.detail;
-                } else if (errorData.error) {
-                    errorMessage = errorData.error;
-                }
-            } catch (jsonError) {
-                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
-                errorMessage = `Ошибка сервера: ${response.status}`;
-            }
-            alert(errorMessage);
-            return;
-        }
-
-        alert('Данные продажи успешно обновлены!');
-    } catch (error) {
-        console.error('Ошибка обновления данных продажи:', error);
-        alert('Произошла ошибка при обновлении данных продажи.');
-    }
-}
-</script>
 </html>

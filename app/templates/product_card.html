@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/cards_style.css">
+    <script src="/static/script.js"></script>
     <title>Товар</title>
 </head>
 <body>
@@ -19,52 +20,8 @@
         <input type="text" id="order_id" name="order_id" value="{{pr.order_id}}" required><br>
         <label for="description_id">Код описания:</label>
         <input type="text" id="description_id" name="description_id" value="{{pr.description_id}}" required><br>
-        <button onclick="updateProduct()">Изменить</button>
+        <button onclick="updateProduct({{ pr.id }})">Изменить</button>
     </form>
 </div>
 </body>
-<script>
-async function updateProduct() {
-    const formData = new FormData(document.getElementById('updateProductForm'));
-    const productData = {};
-
-    for (const [key, value] of formData.entries()) {
-        productData[key] = value;
-    }
-
-    const productId = {{ pr.id }};
-
-    try {
-        const response = await fetch(`/products/${productId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productData),
-        });
-
-        if (!response.ok) {
-            let errorMessage = "Ошибка обновления данных товара";
-            try {
-                const errorData = await response.json();
-                if (errorData.detail) {
-                    errorMessage = errorData.detail;
-                } else if (errorData.error) {
-                    errorMessage = errorData.error;
-                }
-            } catch (jsonError) {
-                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
-                errorMessage = `Ошибка сервера: ${response.status}`;
-            }
-            alert(errorMessage);
-            return;
-        }
-
-        alert('Данные товара успешно обновлены!');
-    } catch (error) {
-        console.error('Ошибка обновления данных товара:', error);
-        alert('Произошла ошибка при обновлении данных товара.');
-    }
-}
-</script>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/cards_style.css">
+    <script src="/static/script.js"></script>
     <title>Поставщик</title>
 </head>
 <body>
@@ -19,52 +20,8 @@
         <input type="text" id="phone_number" name="phone_number" value="{{pr.phone_number}}" required><br>
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" value="{{pr.email}}" required><br>
-        <button onclick="updateProvider()">Изменить</button>
+        <button onclick="updateProvider({{ pr.id }})">Изменить</button>
     </form>
 </div>
 </body>
-<script>
-async function updateProvider() {
-    const formData = new FormData(document.getElementById('updateProviderForm'));
-    const providerData = {};
-
-    for (const [key, value] of formData.entries()) {
-        providerData[key] = value;
-    }
-
-    const providerId = {{ pr.id }};
-
-    try {
-        const response = await fetch(`/providers/${providerId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(providerData),
-        });
-
-        if (!response.ok) {
-            let errorMessage = "Ошибка обновления данных поставщика";
-            try {
-                const errorData = await response.json();
-                if (errorData.detail) {
-                    errorMessage = errorData.detail;
-                } else if (errorData.error) {
-                    errorMessage = errorData.error;
-                }
-            } catch (jsonError) {
-                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
-                errorMessage = `Ошибка сервера: ${response.status}`;
-            }
-            alert(errorMessage);
-            return;
-        }
-
-        alert('Данные товара успешно обновлены!');
-    } catch (error) {
-        console.error('Ошибка обновления данных поставщика:', error);
-        alert('Произошла ошибка при обновлении данных поставщика.');
-    }
-}
-</script>
 </html>

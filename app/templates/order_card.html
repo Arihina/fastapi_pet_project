@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/cards_style.css">
+    <script src="/static/script.js"></script>
     <title>Заказ</title>
 </head>
 <body>
@@ -17,52 +18,8 @@
                value="{{ order.total_cost}}"><br>
         <label for="provider_id">Код поставщика:</label>
         <input type="text" id="provider_id" name="provider_id" value="{{order.provider_id}}" required><br>
-        <button onclick="updateOrder()">Изменить</button>
+        <button onclick="updateOrder({{ order.id }})">Изменить</button>
     </form>
 </div>
 </body>
-<script>
-async function updateOrder() {
-    const formData = new FormData(document.getElementById('updateOrderForm'));
-    const orderData = {};
-
-    for (const [key, value] of formData.entries()) {
-        orderData[key] = value;
-    }
-
-    const orderId = {{ order.id }};
-
-    try {
-        const response = await fetch(`/orders/${orderId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData),
-        });
-
-        if (!response.ok) {
-            let errorMessage = "Ошибка обновления данных заказа";
-            try {
-                const errorData = await response.json();
-                if (errorData.detail) {
-                    errorMessage = errorData.detail;
-                } else if (errorData.error) {
-                    errorMessage = errorData.error;
-                }
-            } catch (jsonError) {
-                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
-                errorMessage = `Ошибка сервера: ${response.status}`;
-            }
-            alert(errorMessage);
-            return;
-        }
-
-        alert('Данные заказа успешно обновлены!');
-    } catch (error) {
-        console.error('Ошибка обновления данных заказа:', error);
-        alert('Произошла ошибка при обновлении данных заказа.');
-    }
-}
-</script>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
     <title>Покупатели</title>
 </head>
 <body>
@@ -36,31 +37,4 @@
     {% endfor %}
 </table>
 </body>
-<script>
-    async function deleteBuyer(buyerId) {
-      if (!confirm("Вы уверены, что хотите удалить покупателя?")) return;
-
-      try {
-        const response = await fetch(`/buyers/${buyerId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          const errorMessage = errorData.detail || `Error deleting buyer: ${response.status}`;
-          alert(errorMessage);
-          return;
-        }
-
-        location.reload();
-
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An unexpected error occurred.');
-      }
-    }
-</script>
 </html>

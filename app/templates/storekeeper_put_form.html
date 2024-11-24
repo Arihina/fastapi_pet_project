@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/storekeeper_form.css">
+    <script src="/static/script.js"></script>
     <title>Товар</title>
 </head>
 <body>
@@ -19,35 +20,8 @@
         <input type="text" id="order_id" name="order_id" value="" ><br>
         <label for="description_id">Код описания:</label>
         <input type="text" id="description_id" name="description_id" value="" ><br>
-        <button onclick="updateProduct()">Изменить</button>
+        <button onclick="updateProductByStorekeeper()">Изменить</button>
     </form>
 </div>
 </body>
-<script>
-async function updateProduct() {
-    const formData = new FormData(document.getElementById('updateProductForm'));
-
-    const productData = {
-    id: parseInt(formData.get('id')),
-    price: formData.get('price') ? parseFloat(formData.get('price')) : null,
-    count: formData.get('count') ? parseInt(formData.get('count')) : null,
-    order_id: formData.get('order_id') ? parseInt(formData.get('order_id')) : null,
-    description_id: formData.get('description_id') ? parseInt(formData.get('description_id')) : null,
-};
-
-    try {
-        const response = await fetch(`/storekeeper/products`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productData),
-        });
-
-    } catch (error) {
-        console.error('Ошибка обновления данных товара:', error);
-        alert('Произошла ошибка при обновлении данных товара.');
-    }
-}
-</script>
 </html>
