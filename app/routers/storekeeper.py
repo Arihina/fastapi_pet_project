@@ -70,18 +70,18 @@ async def get_orders_info(session: AsyncSession = Depends(engine.get_session)):
 
 
 @router.get('/order-form')
-async def get_order_form(session: AsyncSession = Depends(engine.get_session)):
-    pass
+async def get_order_form(request: Request):
+    return templates.TemplateResponse("order_form.html", {"request": request})
 
 
 @router.get('/product-form')
-async def get_product_form(session: AsyncSession = Depends(engine.get_session)):
-    pass
+async def get_product_form(request: Request):
+    return templates.TemplateResponse("product_form.html", {"request": request})
 
 
 @router.get('/sale-form')
-async def get_sale_form(session: AsyncSession = Depends(engine.get_session)):
-    pass
+async def get_sale_form(request: Request):
+    return templates.TemplateResponse("sale_form.html", {"request": request})
 
 
 @router.get('/edit-form')
