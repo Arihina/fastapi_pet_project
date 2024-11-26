@@ -120,3 +120,15 @@ async def delete_description(id: int, session: AsyncSession = Depends(engine.get
     except Exception as ex:
         raise HTTPException(status_code=500, detail="Ошибка при обработке запроса, попробуйте позже")
 
+
+@router.get('/descriptions-filtered')
+async def filter_descriptions(request: Request, furniture_type: str, session: AsyncSession = Depends(engine.get_session)):
+    try:
+        descriptions = await session.execute(select(Description).where(Description.furniture_type == furniture_type))
+        descriptions = descriptions.scalars().all()
+
+        return templates.TemplateResponse('descriptions_filter.html', {"request": request, "lst": descriptions})
+    except SQLAlchemyError as error:
+        raise HTTPException(status_code=500, detail="Ошибка при получении покупателей")
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail="Ошибка при обработке запроса, попробуйте позже")

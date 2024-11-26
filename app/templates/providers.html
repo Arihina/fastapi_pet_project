@@ -5,9 +5,41 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/script.js"></script>
     <title>Поставщики</title>
+    <style>
+        .block_search {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .block_search input[type="text"] {
+            padding: 10px 10px 10px 10px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+
+        .block_search button {
+            background-color: #0A5F38;
+            color: white;
+            cursor: pointer;
+            padding: 10px 10px 10px 10px;
+            border: none;
+            border-radius: 25px;
+        }
+    </style>
 </head>
 <body>
 <h1>Поставщики</h1>
+<div class="block_search">
+    <form action="{{ url_for('filter_providers') }}" method="get" style="margin-bottom: 20px;">
+    <input type="text" name="product_name" placeholder="Введите наименование товара" required>
+    <button type="submit">Поиск</button>
+</form>
+</div>
 <table>
     <tr>
         <th>Код поставщика</th>

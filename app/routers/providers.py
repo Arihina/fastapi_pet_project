@@ -120,3 +120,16 @@ async def delete_provider(id: int, session: AsyncSession = Depends(engine.get_se
     except Exception as ex:
         raise HTTPException(status_code=500, detail="Ошибка при обработке запроса, попробуйте позже")
 
+
+@router.get('/providers-filtered')
+async def filter_providers(request: Request, product_name: str,
+                           session: AsyncSession = Depends(engine.get_session)):
+    try:
+        providers = await session.execute(select(Provider).where(Provider.product_name == product_name))
+        providers = providers.scalars().all()
+
+        return templates.TemplateResponse('providers_filter.html', {"request": request, "lst": providers})
+    except SQLAlchemyError as error:
+        raise HTTPException(status_code=500, detail="Ошибка при получении покупателей")
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail="Ошибка при обработке запроса, попробуйте позже")

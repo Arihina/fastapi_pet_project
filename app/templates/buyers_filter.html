@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/storekeeper_tables.css">
+    <title>Покупатели</title>
+</head>
+<body>
+<h1>Покупатели</h1>
+<table>
+    <tr>
+        <th>Код</th>
+        <th>ФИО</th>
+        <th>Организация</th>
+        <th>Номер телефона</th>
+        <th>Адрес</th>
+    </tr>
+    {% for e in lst %}
+    <tr>
+        <td>{{e.id}}</td>
+        <td>{{e.full_name}}</td>
+        <td>{{e.organization_name}}</td>
+        <td>{{e.phone_number}}</td>
+        <td>{{e.address}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

@@ -119,3 +119,15 @@ async def delete_buyer(id: int, session: AsyncSession = Depends(engine.get_sessi
     except Exception as ex:
         raise HTTPException(status_code=500, detail="Ошибка при обработке запроса, попробуйте позже")
 
+
+@router.get('/buyers-filtered')
+async def filter_buyers(request: Request, full_name: str, session: AsyncSession = Depends(engine.get_session)):
+    try:
+        buyers = await session.execute(select(Buyer).where(Buyer.full_name == full_name))
+        buyers = buyers.scalars().all()
+
+        return templates.TemplateResponse('buyers_filter.html', {"request": request, "lst": buyers})
+    except SQLAlchemyError as error:
+        raise HTTPException(status_code=500, detail="Ошибка при получении покупателей")
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail="Ошибка при обработке запроса, попробуйте позже")
