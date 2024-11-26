@@ -37,6 +37,21 @@ async def get_products_info(request: Request, session: AsyncSession = Depends(en
     return templates.TemplateResponse("products_table.html", {"request": request, "lst": result})
 
 
+@router.get('/products-info-filtered')
+async def filter_products_info(request: Request, furniture_type: str,
+                               session: AsyncSession = Depends(engine.get_session)):
+    query = (
+        select(Product.price, Product.count, Description.dimensions, Description.weight, Description.furniture_type,
+               Description.material, Product.id)
+        .join(Description, Product.description_id == Description.id)
+        .where(Description.furniture_type == furniture_type))
+
+    result = await session.execute(query)
+    result = [ProductInfo.from_orm(_).dict() for _ in result.fetchall()]
+
+    return templates.TemplateResponse("products_table_filter.html", {"request": request, "lst": result})
+
+
 @router.get('/sales-info')
 async def get_sales_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
     query = (
@@ -63,6 +78,20 @@ async def get_buyers_info(request: Request, session: AsyncSession = Depends(engi
     return templates.TemplateResponse("buyers_table.html", {"request": request, "lst": result})
 
 
+@router.get('/buyers-info-filtered')
+async def filter_buyers_info(request: Request, full_name: str,
+                             session: AsyncSession = Depends(engine.get_session)):
+    query = (
+        select(Buyer.full_name, Buyer.organization_name, Buyer.phone_number,
+               Buyer.address, SalesAccounting.date, SalesAccounting.product_id)
+    ).join(SalesAccounting, Buyer.id == SalesAccounting.buyer_id).where(Buyer.full_name == full_name)
+
+    result = await session.execute(query)
+    result = [BuyerInfo.from_orm(_).dict() for _ in result.fetchall()]
+
+    return templates.TemplateResponse("buyers_table_filter.html", {"request": request, "lst": result})
+
+
 @router.get('/orders-info')
 async def get_orders_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
     query = (
@@ -75,6 +104,22 @@ async def get_orders_info(request: Request, session: AsyncSession = Depends(engi
     result = [OrderInfo.from_orm(_).dict() for _ in result.fetchall()]
 
     return templates.TemplateResponse("orders_table.html", {"request": request, "lst": result})
+
+
+@router.get('/orders-info-filtered')
+async def filter_orders_info(request: Request, product_name: str,
+                             session: AsyncSession = Depends(engine.get_session)):
+    query = (
+        select(Order.product_quantity, Order.total_cost, Order.id,
+               Provider.product_name, Provider.email,
+               Provider.phone_number, Provider.full_name)
+    ).join(Provider, Provider.id == Order.provider_id).join(Product, Product.order_id == Order.id).where(
+        Provider.product_name == product_name)
+
+    result = await session.execute(query)
+    result = [OrderInfo.from_orm(_).dict() for _ in result.fetchall()]
+
+    return templates.TemplateResponse("orders_table_filter.html", {"request": request, "lst": result})
 
 
 @router.get('/order-form')
