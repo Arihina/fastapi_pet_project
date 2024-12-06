@@ -47,6 +47,31 @@ function goToSaleForm() {
 function goToEditForm() {
   window.location.href = "/storekeeper/edit-form";
 }
+async function deleteStock(stockId) {
+      if (!confirm("Вы уверены, что хотите удалить данные поступления?")) return;
+
+      try {
+        const response = await fetch(`/stocks-accounting/${stockId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          const errorMessage = errorData.detail || `Error deleting buyer: ${response.status}`;
+          alert(errorMessage);
+          return;
+        }
+
+        location.reload();
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An unexpected error occurred.');
+      }
+}
 async function deleteSale(saleId) {
       if (!confirm("Вы уверены, что хотите удалить данные продажи?")) return;
 
@@ -71,6 +96,46 @@ async function deleteSale(saleId) {
         console.error('Error:', error);
         alert('An unexpected error occurred.');
       }
+}
+async function submitFormStocks() {
+    const formData = new FormData(document.getElementById('stockForm'));
+    const saleData = {};
+
+    for (const [key, value] of formData.entries()) {
+        saleData[key] = value;
+    }
+
+    try {
+        const response = await fetch('/stocks-accounting', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(saleData),
+        });
+
+        if (!response.ok) {
+            let errorMessage = "Ошибка отправки формы";
+            try {
+                const errorData = await response.json();
+                if (errorData.detail) {
+                    errorMessage = errorData.detail;
+                } else if (errorData.error){
+                    errorMessage = errorData.error;
+                }
+            } catch (jsonError) {
+                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
+                errorMessage = `Ошибка сервера: ${response.status}`;
+            }
+            alert(errorMessage);
+            return;
+        }
+
+        alert('Поступление добавлено успешно!');
+    } catch (error) {
+        console.error('Ошибка отправки формы:', error);
+        alert('Произошла ошибка при добавлении поступления.');
+    }
 }
 async function submitFormSales() {
     const formData = new FormData(document.getElementById('saleForm'));
@@ -110,6 +175,42 @@ async function submitFormSales() {
     } catch (error) {
         console.error('Ошибка отправки формы:', error);
         alert('Произошла ошибка при добавлении продажи.');
+    }
+}
+async function updateStock(stokeId) {
+    const formData = new FormData(document.getElementById('updateStockForm'));
+    const saleData = {};
+    for (const [key, value] of formData.entries()) {
+        saleData[key] = value;
+    }
+    try {
+        const response = await fetch(`/stocks-accounting/${stokeId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(saleData),
+        });
+        if (!response.ok) {
+            let errorMessage = "Ошибка обновления данных поступления";
+            try {
+                const errorData = await response.json();
+                if (errorData.detail) {
+                    errorMessage = errorData.detail;
+                } else if (errorData.error) {
+                    errorMessage = errorData.error;
+                }
+            } catch (jsonError) {
+                console.error("Ошибка парсинга ответа об ошибке:", jsonError);
+                errorMessage = `Ошибка сервера: ${response.status}`;
+            }
+            alert(errorMessage);
+            return;
+        }
+        alert('Данные поступления успешно обновлены!');
+    } catch (error) {
+        console.error('Ошибка обновления данных поступления:', error);
+        alert('Произошла ошибка при обновлении данных поступления.');
     }
 }
 async function updateSale(saleId) {
@@ -688,4 +789,7 @@ function goToProducts() {
 }
 function goToSales() {
   window.location.href = "/sales-accounting";
+}
+function goToStocks() {
+  window.location.href = "/stocks-accounting";
 }

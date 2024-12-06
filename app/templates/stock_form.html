@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/cards_style.css">
+    <script src="/static/script.js"></script>
+    <title>Добавить</title>
+</head>
+<body>
+<h1>Добавить продажу</h1>
+<div class="block">
+    <form id="stockForm">
+        <label for="date">Дата:</label>
+        <input type="text" name="date" id="date" required><br><br>
+        <label for="product_id">Код товара:</label>
+        <input type="text" name="product_id" id="product_id" required><br><br>
+        <label for="quantity">Кол-во:</label>
+        <input type="text" name="quantity" id="quantity" required><br><br>
+        <button type="button" onclick="submitFormStocks()">Добавить</button>
+    </form>
+</div>
+</body>
+</html>
