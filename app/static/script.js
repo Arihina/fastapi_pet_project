@@ -29,20 +29,26 @@ function goToProductsInfo() {
 function goToSalesInfo() {
   window.location.href = "/storekeeper/sales-info";
 }
-function goToBuyersInfo() {
-  window.location.href = "/storekeeper/buyers-info";
+function goToStocksInfo() {
+  window.location.href = "/storekeeper/stocks-info";
 }
 function goToOrdersInfo() {
   window.location.href = "/storekeeper/orders-info";
 }
+function goToProvidersInfo() {
+  window.location.href = "/storekeeper/providers-info";
+}
 function goToOrderForm() {
   window.location.href = "/storekeeper/order-form";
 }
-function goToProductForm() {
-  window.location.href = "/storekeeper/product-form";
+function goToBuyerForm() {
+  window.location.href = "/storekeeper/buyer-form";
 }
 function goToSaleForm() {
   window.location.href = "/storekeeper/sale-form";
+}
+function goToStockForm() {
+  window.location.href = "/storekeeper/stock-form";
 }
 function goToEditForm() {
   window.location.href = "/storekeeper/edit-form";

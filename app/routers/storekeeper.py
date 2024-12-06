@@ -9,9 +9,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.base import Product, Description, SalesAccounting, Buyer, Provider, Order
+from app.models.base import Product, Description, Buyer, Provider, Order, SalesRecord, StockRecord
 from app.models.db_engine import engine
-from app.schemas.base import ProductInfo, SaleInfo, BuyerInfo, OrderInfo, ProductData
+from app.schemas.base import ProductInfo, SaleInfo, StockInfo, ProductData
 
 router = APIRouter(prefix='/storekeeper')
 
@@ -27,8 +27,8 @@ async def storekeeper(request: Request):
 @router.get('/products-info')
 async def get_products_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
     query = (
-        select(Product.price, Product.count, Description.dimensions, Description.weight, Description.furniture_type,
-               Description.material, Product.id)
+        select(Product.price, Product.stock, Description.dimensions, Description.weight, Description.furniture_type,
+               Description.material, Product.id, Product.stock)
         .join(Description, Product.description_id == Description.id))
 
     result = await session.execute(query)
@@ -41,7 +41,7 @@ async def get_products_info(request: Request, session: AsyncSession = Depends(en
 async def filter_products_info(request: Request, furniture_type: str,
                                session: AsyncSession = Depends(engine.get_session)):
     query = (
-        select(Product.price, Product.count, Description.dimensions, Description.weight, Description.furniture_type,
+        select(Product.price, Product.stock, Description.dimensions, Description.weight, Description.furniture_type,
                Description.material, Product.id)
         .join(Description, Product.description_id == Description.id)
         .where(Description.furniture_type == furniture_type))
@@ -55,9 +55,9 @@ async def filter_products_info(request: Request, furniture_type: str,
 @router.get('/sales-info')
 async def get_sales_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
     query = (
-        select(Product.price, Product.count, Product.order_id,
-               SalesAccounting.date)
-    ).join(SalesAccounting, Product.id == SalesAccounting.product_id)
+        select(SalesRecord.date, Order.total_cost, Order.product_quantity, Buyer.address, Buyer.phone_number,
+               )
+    ).join(SalesRecord, Order.id == SalesRecord.order_id).join(Buyer, Buyer.id == SalesRecord.buyer_id)
 
     result = await session.execute(query)
     result = [SaleInfo.from_orm(_).dict() for _ in result.fetchall()]
@@ -65,61 +65,33 @@ async def get_sales_info(request: Request, session: AsyncSession = Depends(engin
     return templates.TemplateResponse("sales_table.html", {"request": request, "lst": result})
 
 
-@router.get('/buyers-info')
-async def get_buyers_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
+@router.get('/stocks-info')
+async def get_stocks_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
     query = (
-        select(Buyer.full_name, Buyer.organization_name, Buyer.phone_number,
-               Buyer.address, SalesAccounting.date, SalesAccounting.product_id)
-    ).join(SalesAccounting, Buyer.id == SalesAccounting.buyer_id)
+        select(Provider.organization_name, StockRecord.product_id,
+               StockRecord.date, StockRecord.quantity)
+    ).join(Product, StockRecord.product_id == Product.id).join(Provider, Provider.id == Product.provider_id)
 
     result = await session.execute(query)
-    result = [BuyerInfo.from_orm(_).dict() for _ in result.fetchall()]
+    result = [StockInfo.from_orm(_).dict() for _ in result.fetchall()]
 
-    return templates.TemplateResponse("buyers_table.html", {"request": request, "lst": result})
-
-
-@router.get('/buyers-info-filtered')
-async def filter_buyers_info(request: Request, full_name: str,
-                             session: AsyncSession = Depends(engine.get_session)):
-    query = (
-        select(Buyer.full_name, Buyer.organization_name, Buyer.phone_number,
-               Buyer.address, SalesAccounting.date, SalesAccounting.product_id)
-    ).join(SalesAccounting, Buyer.id == SalesAccounting.buyer_id).where(Buyer.full_name == full_name)
-
-    result = await session.execute(query)
-    result = [BuyerInfo.from_orm(_).dict() for _ in result.fetchall()]
-
-    return templates.TemplateResponse("buyers_table_filter.html", {"request": request, "lst": result})
+    return templates.TemplateResponse("stocks_table.html", {"request": request, "lst": result})
 
 
 @router.get('/orders-info')
 async def get_orders_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
-    query = (
-        select(Order.product_quantity, Order.total_cost, Order.id,
-               Provider.product_name, Provider.email,
-               Provider.phone_number, Provider.full_name)
-    ).join(Provider, Provider.id == Order.provider_id).join(Product, Product.order_id == Order.id)
-
-    result = await session.execute(query)
-    result = [OrderInfo.from_orm(_).dict() for _ in result.fetchall()]
+    result = await session.execute(select(Order))
+    result = result.scalars().all()
 
     return templates.TemplateResponse("orders_table.html", {"request": request, "lst": result})
 
 
-@router.get('/orders-info-filtered')
-async def filter_orders_info(request: Request, product_name: str,
-                             session: AsyncSession = Depends(engine.get_session)):
-    query = (
-        select(Order.product_quantity, Order.total_cost, Order.id,
-               Provider.product_name, Provider.email,
-               Provider.phone_number, Provider.full_name)
-    ).join(Provider, Provider.id == Order.provider_id).join(Product, Product.order_id == Order.id).where(
-        Provider.product_name == product_name)
+@router.get('/providers-info')
+async def get_providers_info(request: Request, session: AsyncSession = Depends(engine.get_session)):
+    result = await session.execute(select(Provider))
+    result = result.scalars().all()
 
-    result = await session.execute(query)
-    result = [OrderInfo.from_orm(_).dict() for _ in result.fetchall()]
-
-    return templates.TemplateResponse("orders_table_filter.html", {"request": request, "lst": result})
+    return templates.TemplateResponse("providers_table.html", {"request": request, "lst": result})
 
 
 @router.get('/order-form')
@@ -127,14 +99,19 @@ async def get_order_form(request: Request):
     return templates.TemplateResponse("order_form.html", {"request": request})
 
 
-@router.get('/product-form')
-async def get_product_form(request: Request):
-    return templates.TemplateResponse("product_form.html", {"request": request})
+@router.get('/buyer-form')
+async def get_buyer_form(request: Request):
+    return templates.TemplateResponse("buyer_form.html", {"request": request})
 
 
 @router.get('/sale-form')
 async def get_sale_form(request: Request):
     return templates.TemplateResponse("sale_form.html", {"request": request})
+
+
+@router.get('/stock-form')
+async def get_stock_form(request: Request):
+    return templates.TemplateResponse("stock_form.html", {"request": request})
 
 
 @router.get('/edit-form')
@@ -151,14 +128,8 @@ async def update_product_info(product_data: ProductData, session: AsyncSession =
         if product is None:
             raise HTTPException(status_code=404, detail="Товар не найден")
 
-        if product_data.price is not None:
-            product.price = product_data.price
         if product_data.count is not None:
-            product.count = product_data.count
-        if product_data.order_id is not None:
-            product.provider_id = product_data.order_id
-        if product_data.description_id is not None:
-            product.description_id = product_data.description_id
+            product.stock = product_data.count
 
         await session.commit()
         await session.refresh(product)

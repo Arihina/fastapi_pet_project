@@ -33,32 +33,19 @@
 </head>
 <body>
 <h1>Заказы</h1>
-<div class="block_search">
-    <form action="{{ url_for('filter_orders_info') }}" method="get" style="margin-bottom: 20px;">
-        <input type="text" name="product_name" placeholder="Введите наименование товара" required>
-        <button type="submit">Поиск</button>
-    </form>
-</div>
 <table>
     <tr>
         <th>Код заказа</th>
         <th>Количество товаров</th>
         <th>Общая стоимость</th>
-        <th>Наименование товара</th>
-        <th>ФИО поставщика</th>
-        <th>Номер телефона</th>
-        <th>Email</th>
-
+        <th>Номер товара</th>
     </tr>
     {% for e in lst %}
     <tr>
         <td>{{e.id}}</td>
         <td>{{e.product_quantity}}</td>
         <td>{{e.total_cost}}</td>
-        <td>{{e.product_name}}</td>
-        <td>{{e.full_name}}</td>
-        <td>{{e.phone_number}}</td>
-        <td>{{e.email}}</td>
+        <td>{{e.product_id}}</td>
     </tr>
     {% endfor %}
 </table>

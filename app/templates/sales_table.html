@@ -9,18 +9,20 @@
 <h1>Продажи</h1>
 <table>
     <tr>
-        <th>Цена</th>
-        <th>Количество</th>
-        <th>Код заказа</th>
         <th>Дата</th>
+        <th>Сумма</th>
+        <th>Кол-во</th>
+        <th>Адрес покупателя</th>
+        <th>Номер телефона покупателя</th>
 
     </tr>
     {% for e in lst %}
     <tr>
-        <td>{{e.price}}</td>
-        <td>{{e.count}}</td>
-        <td>{{e.order_id}}</td>
         <td>{{e.date}}</td>
+        <td>{{e.total_cost}}</td>
+        <td>{{e.product_quantity}}</td>
+        <td>{{e.address}}</td>
+        <td>{{e.phone_number}}</td>
     </tr>
     {% endfor %}
 </table>

@@ -124,7 +124,7 @@ class StockRecordRequest(BaseModel):
 class ProductInfo(BaseModel):
     id: int
     price: float
-    count: int
+    stock: int
     dimensions: str
     furniture_type: str
     weight: int
@@ -135,10 +135,21 @@ class ProductInfo(BaseModel):
 
 
 class SaleInfo(BaseModel):
-    price: float
-    count: int
-    order_id: int
     date: datetime.datetime
+    product_quantity: int
+    total_cost: float
+    phone_number: str
+    address: str
+
+    class Config:
+        from_attributes = True
+
+
+class StockInfo(BaseModel):
+    product_id: int
+    date: datetime.datetime
+    quantity: int
+    organization_name: str
 
     class Config:
         from_attributes = True
@@ -160,10 +171,7 @@ class OrderInfo(BaseModel):
     id: int
     product_quantity: int
     total_cost: float
-    full_name: str
-    product_name: str
-    phone_number: str
-    email: str
+    product_id: int
 
     class Config:
         from_attributes = True
@@ -171,7 +179,4 @@ class OrderInfo(BaseModel):
 
 class ProductData(BaseModel):
     id: int
-    price: float | None = None
-    count: int | None = None
-    order_id: int | None = None
-    description_id: int | None = None
+    count: int

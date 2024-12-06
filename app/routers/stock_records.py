@@ -37,13 +37,13 @@ async def get_stock_form(request: Request):
 
 
 @router.get('/stock-accounting/{id}', response_model=StockRecordResponse)
-async def get_sale(request: Request, id: int, session: AsyncSession = Depends(engine.get_session)):
+async def get_stock(request: Request, id: int, session: AsyncSession = Depends(engine.get_session)):
     try:
         result = await session.execute(select(StockRecord).where(StockRecord.id == id))
         stock = result.scalar_one_or_none()
 
         if stock:
-            return templates.TemplateResponse('stock_card.html', {"request": request, "sale": stock})
+            return templates.TemplateResponse('stock_card.html', {"request": request, "stock": stock})
         else:
             raise HTTPException(status_code=404, detail="Поступление не найдена")
     except SQLAlchemyError as error:
