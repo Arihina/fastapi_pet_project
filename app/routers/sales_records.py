@@ -8,9 +8,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.base import SalesAccounting
+from app.models.base import SalesRecord
 from app.models.db_engine import engine
-from app.schemas.base import SalesAccountingResponse, SalesAccountingRequest
+from app.schemas.base import SalesRecordRequest, SalesRecordResponse
 
 router = APIRouter()
 
@@ -18,10 +18,10 @@ router.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent.pa
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent.parent / "templates")
 
 
-@router.get('/sales-accounting', response_model=list[SalesAccountingResponse])
+@router.get('/sales-accounting', response_model=list[SalesRecordResponse])
 async def get_all_sales_accounting(request: Request, session: AsyncSession = Depends(engine.get_session)):
     try:
-        result = await session.execute(select(SalesAccounting))
+        result = await session.execute(select(SalesRecord))
         sales = result.scalars().all()
 
         return templates.TemplateResponse('sales.html', {"request": request, "lst": sales})
@@ -36,10 +36,10 @@ async def get_sale_form(request: Request):
     return templates.TemplateResponse("sale_form.html", {"request": request})
 
 
-@router.get('/sales-accounting/{id}', response_model=SalesAccountingResponse)
+@router.get('/sales-accounting/{id}', response_model=SalesRecordResponse)
 async def get_sale(request: Request, id: int, session: AsyncSession = Depends(engine.get_session)):
     try:
-        result = await session.execute(select(SalesAccounting).where(SalesAccounting.id == id))
+        result = await session.execute(select(SalesRecord).where(SalesRecord.id == id))
         sale = result.scalar_one_or_none()
 
         if sale:
@@ -53,11 +53,11 @@ async def get_sale(request: Request, id: int, session: AsyncSession = Depends(en
 
 
 @router.post('/sales-accounting')
-async def add_sales_accounting(sale_data: SalesAccountingRequest, session: AsyncSession = Depends(engine.get_session)):
+async def add_sales_accounting(sale_data: SalesRecordRequest, session: AsyncSession = Depends(engine.get_session)):
     try:
-        new_sales = SalesAccounting(
+        new_sales = SalesRecord(
             date=sale_data.date,
-            product_id=sale_data.product_id,
+            order_id=sale_data.order_id,
             buyer_id=sale_data.buyer_id
         )
 
@@ -73,10 +73,10 @@ async def add_sales_accounting(sale_data: SalesAccountingRequest, session: Async
 
 
 @router.put('/sales-accounting/{id}')
-async def update_sales_accounting(id: int, sale_data: SalesAccountingRequest,
+async def update_sales_accounting(id: int, sale_data: SalesRecordRequest,
                                   session: AsyncSession = Depends(engine.get_session)):
     try:
-        result = await session.execute(select(SalesAccounting).where(SalesAccounting.id == id))
+        result = await session.execute(select(SalesRecord).where(SalesRecord.id == id))
         sale = result.scalar_one_or_none()
 
         if sale is None:
@@ -84,8 +84,8 @@ async def update_sales_accounting(id: int, sale_data: SalesAccountingRequest,
 
         if sale_data.date is not None:
             sale.date = sale_data.date
-        if sale_data.product_id is not None:
-            sale.product_id = sale_data.product_id
+        if sale_data.order_id is not None:
+            sale.order_id = sale_data.order_id
         if sale_data.buyer_id is not None:
             sale.buyer_id = sale_data.buyer_id
 
@@ -102,7 +102,7 @@ async def update_sales_accounting(id: int, sale_data: SalesAccountingRequest,
 @router.delete('/sales-accounting/{id}')
 async def delete_sales_accounting(id: int, session: AsyncSession = Depends(engine.get_session)):
     try:
-        result = await session.execute(select(SalesAccounting).where(SalesAccounting.id == id))
+        result = await session.execute(select(SalesRecord).where(SalesRecord.id == id))
         sales_accounting = result.scalar_one_or_none()
 
         if sales_accounting is None:

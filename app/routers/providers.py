@@ -56,8 +56,7 @@ async def get_provider(request: Request, id: int, session: AsyncSession = Depend
 async def add_provider(provider: ProviderRequest, session: AsyncSession = Depends(engine.get_session)):
     try:
         new_provider = Provider(
-            full_name=provider.full_name,
-            product_name=provider.product_name,
+            organization_name=provider.organization_name,
             phone_number=provider.phone_number,
             email=provider.email
         )
@@ -83,10 +82,8 @@ async def update_provider(id: int, provider_data: ProviderRequest,
         if provider is None:
             raise HTTPException(status_code=404, detail="Поставщик не найден")
 
-        if provider_data.full_name is not None:
-            provider.full_name = provider_data.full_name
-        if provider_data.product_name is not None:
-            provider.product_name = provider_data.product_name
+        if provider_data.organization_name is not None:
+            provider.organization_name = provider_data.organization_name
         if provider_data.phone_number is not None:
             provider.phone_number = provider_data.phone_number
         if provider_data.email is not None:
@@ -122,10 +119,10 @@ async def delete_provider(id: int, session: AsyncSession = Depends(engine.get_se
 
 
 @router.get('/providers-filtered')
-async def filter_providers(request: Request, product_name: str,
+async def filter_providers(request: Request, organization_name: str,
                            session: AsyncSession = Depends(engine.get_session)):
     try:
-        providers = await session.execute(select(Provider).where(Provider.product_name == product_name))
+        providers = await session.execute(select(Provider).where(Provider.organization_name == organization_name))
         providers = providers.scalars().all()
 
         return templates.TemplateResponse('providers_filter.html', {"request": request, "lst": providers})

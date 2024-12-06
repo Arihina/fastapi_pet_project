@@ -13,9 +13,9 @@
     <form id="updateSaleForm">
         <label for="date">Дата:</label>
         <input type="text" id="date" name="date" value="{{sale.date}}" required><br>
-        <label for="product_id">Код товара:</label>
-        <input type="text" id="product_id" name="product_id"
-               value="{{ sale.product_id}}"><br>
+        <label for="order_id">Код заказа:</label>
+        <input type="text" id="order_id" name="order_id"
+               value="{{ sale.order_id}}"><br>
         <label for="buyer_id">Код покупателя:</label>
         <input type="text" id="buyer_id" name="buyer_id" value="{{sale.buyer_id}}" required><br>
         <button onclick="updateSale({{ sale.id }})">Изменить</button>

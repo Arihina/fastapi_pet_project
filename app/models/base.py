@@ -59,7 +59,7 @@ class Product(Base):
     description_id: Mapped[int] = mapped_column("код_описания", ForeignKey("Описание.код"))
     price: Mapped[float] = mapped_column("цена")
     stock: Mapped[int] = mapped_column("количество_в_наличии")
-    supplier_id: Mapped[int] = mapped_column("код_поставщика", ForeignKey("Поставщик.код"))
+    provider_id: Mapped[int] = mapped_column("код_поставщика", ForeignKey("Поставщик.код"))
 
     description = relationship("Description", back_populates="products")
     provider = relationship("Provider", back_populates="products")

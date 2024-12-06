@@ -58,7 +58,7 @@ async def add_order(order: OrderRequest, session: AsyncSession = Depends(engine.
         new_order = Order(
             product_quantity=order.product_quantity,
             total_cost=order.total_cost,
-            provider_id=order.provider_id
+            product_id=order.product_id
         )
 
         session.add(new_order)
@@ -85,8 +85,8 @@ async def update_order(id: int, order_data: OrderRequest, session: AsyncSession 
             order.product_quantity = order_data.product_quantity
         if order_data.total_cost is not None:
             order.total_cost = order_data.total_cost
-        if order_data.provider_id is not None:
-            order.provider_id = order_data.provider_id
+        if order_data.product_id is not None:
+            order.product_id = order_data.product_id
 
         await session.commit()
         await session.refresh(order)

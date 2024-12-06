@@ -57,8 +57,8 @@ async def add_product(product: ProductRequest, session: AsyncSession = Depends(e
     try:
         new_product = Product(
             price=product.price,
-            count=product.count,
-            order_id=product.order_id,
+            stock=product.stock,
+            provider_id=product.provider_id,
             description_id=product.description_id
         )
 
@@ -85,10 +85,10 @@ async def update_product(id: int, product_data: ProductRequest,
 
         if product_data.price is not None:
             product.price = product_data.price
-        if product_data.count is not None:
-            product.count = product_data.count
-        if product_data.order_id is not None:
-            product.order_id = product_data.order_id
+        if product_data.stock is not None:
+            product.stock = product_data.stock
+        if product_data.provider_id is not None:
+            product.provider_id = product_data.provider_id
         if product_data.description_id is not None:
             product.description_id = product_data.description_id
 

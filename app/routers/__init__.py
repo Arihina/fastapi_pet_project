@@ -7,7 +7,7 @@ from .login import router as login_router
 from .orders import router as orders_router
 from .products import router as product_router
 from .providers import router as provider_router
-from .sales_accounting import router as sales_accounting_router
+from .sales_records import router as sales_accounting_router
 from .storekeeper import router as storekeeper_router
 
 router = APIRouter()

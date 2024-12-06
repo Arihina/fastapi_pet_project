@@ -12,8 +12,8 @@
     <tr>
         <th>Код товара</th>
         <th>Цена</th>
-        <th>Количество</th>
-        <th>Код заказа</th>
+        <th>Количество в наличии</th>
+        <th>Код поставщика</th>
         <th>Код описания</th>
         <th style="background-color: #0A5F38; color: #f5f5f5; text-align: center;" colspan="2">
             <a href="{{ url_for('get_product_form') }}" style="text-decoration: none; color: #f5f5f5;">Добавить</a>
@@ -23,8 +23,8 @@
     <tr>
         <td>{{e.id}}</td>
         <td>{{e.price}}</td>
-        <td>{{e.count}}</td>
-        <td>{{e.order_id}}</td>
+        <td>{{e.stock}}</td>
+        <td>{{e.provider_id}}</td>
         <td>{{e.description_id}}</td>
         <td style="background-color: #003153; color: #f5f5f5;  text-align: center;">
             <a href="{{ url_for('get_product', id=e.id) }}" style="text-decoration: none; color: #f5f5f5;">Изменить</a>

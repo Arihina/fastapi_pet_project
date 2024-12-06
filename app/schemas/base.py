@@ -7,7 +7,7 @@ class OrderResponse(BaseModel):
     id: int
     product_quantity: int
     total_cost: float
-    provider_id: int
+    product_id: int
 
     class Config:
         from_attributes = True
@@ -16,7 +16,7 @@ class OrderResponse(BaseModel):
 class OrderRequest(BaseModel):
     product_quantity: int = None
     total_cost: float = None
-    provider_id: int = None
+    product_id: int = None
 
 
 class DescriptionResponse(BaseModel):
@@ -57,8 +57,7 @@ class BuyerRequest(BaseModel):
 
 class ProviderResponse(BaseModel):
     id: int
-    full_name: str
-    product_name: str
+    organization_name: str
     phone_number: str
     email: str
 
@@ -67,8 +66,7 @@ class ProviderResponse(BaseModel):
 
 
 class ProviderRequest(BaseModel):
-    full_name: str = None
-    product_name: str = None
+    organization_name: str = None
     phone_number: str = None
     email: str = None
 
@@ -76,8 +74,8 @@ class ProviderRequest(BaseModel):
 class ProductResponse(BaseModel):
     id: int
     price: float
-    count: int
-    order_id: int
+    stock: int
+    provider_id: int
     description_id: int
 
     class Config:
@@ -86,25 +84,41 @@ class ProductResponse(BaseModel):
 
 class ProductRequest(BaseModel):
     price: float = None
-    count: int = None
-    order_id: int = None
+    stock: int = None
+    provider_id: int = None
     description_id: int = None
 
 
-class SalesAccountingResponse(BaseModel):
+class SalesRecordResponse(BaseModel):
     id: int
     date: datetime.datetime
-    product_id: int
+    order_id: int
     buyer_id: int
 
     class Config:
         from_attributes = True
 
 
-class SalesAccountingRequest(BaseModel):
+class SalesRecordRequest(BaseModel):
+    date: datetime.datetime = None
+    order_id: int = None
+    buyer_id: int = None
+
+
+class StockRecordResponse(BaseModel):
+    id: int
+    date: datetime.datetime
+    product_id: int
+    quantity: int
+
+    class Config:
+        from_attributes = True
+
+
+class StockRecordRequest(BaseModel):
     date: datetime.datetime = None
     product_id: int = None
-    buyer_id: int = None
+    quantity: int = None
 
 
 class ProductInfo(BaseModel):
@@ -161,4 +175,3 @@ class ProductData(BaseModel):
     count: int | None = None
     order_id: int | None = None
     description_id: int | None = None
-

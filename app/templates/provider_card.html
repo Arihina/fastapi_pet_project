@@ -11,11 +11,9 @@
     <h1>Поставщик {{ pr.id }}</h1>
 
     <form id="updateProviderForm">
-        <label for="full_name">ФИО:</label>
-        <input type="text" id="full_name" name="full_name" value="{{pr.full_name}}" required><br>
-        <label for="product_name">Наименование товара:</label>
-        <input type="text" id="product_name" name="product_name"
-               value="{{ pr.product_name}}"><br>
+        <label for="organization_name">Наименование организации:</label>
+        <input type="text" id="organization_name" name="organization_name"
+               value="{{pr.organization_name}}" required><br>
         <label for="phone_number">Номер телефона:</label>
         <input type="text" id="phone_number" name="phone_number" value="{{pr.phone_number}}" required><br>
         <label for="email">Email:</label>

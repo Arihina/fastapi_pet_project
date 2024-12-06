@@ -13,11 +13,11 @@
     <form id="updateProductForm">
         <label for="price">Цена продажи:</label>
         <input type="text" id="price" name="price" value="{{pr.price}}" required><br>
-        <label for="count">Количество:</label>
+        <label for="count">Количество в наличии:</label>
         <input type="text" id="count" name="count"
-               value="{{ pr.count}}"><br>
-        <label for="order_id">Код поставщика:</label>
-        <input type="text" id="order_id" name="order_id" value="{{pr.order_id}}" required><br>
+               value="{{ pr.stock}}"><br>
+        <label for="provider_id">Код поставщика:</label>
+        <input type="text" id="provider_id" name="provider_id" value="{{pr.provider_id}}" required><br>
         <label for="description_id">Код описания:</label>
         <input type="text" id="description_id" name="description_id" value="{{pr.description_id}}" required><br>
         <button onclick="updateProduct({{ pr.id }})">Изменить</button>
