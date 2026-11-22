@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from routers import router as api_router
+from app.routers import router as api_router
 
 
 @asynccontextmanager
@@ -31,4 +31,5 @@ async def index(request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app)
+    # python -m app.main или uvicorn app.main:app
+    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
